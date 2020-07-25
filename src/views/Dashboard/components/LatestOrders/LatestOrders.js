@@ -240,9 +240,9 @@ const LatestOrders = (props) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Order Ref</TableCell>
+                  <TableCell>ID</TableCell>
                   <TableCell>Customer</TableCell>
-                  <TableCell sortDirection="desc">Date</TableCell>
+                  <TableCell sortDirection="desc">Product</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

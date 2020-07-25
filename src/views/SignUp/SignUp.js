@@ -184,32 +184,18 @@ const SignUp = (props) => {
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography className={classes.quoteText} variant="h1">
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
-              </Typography>
-              <div className={classes.person}>
-                <Typography className={classes.name} variant="body1">
-                  Takamaru Ayako
-                </Typography>
-                <Typography className={classes.bio} variant="body2">
-                  Manager at inVision
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </Grid>
-        <Grid className={classes.content} item lg={7} xs={12}>
+        <Grid className={classes.content} xs={12}>
           <div className={classes.content}>
             <div className={classes.contentHeader}>
               <IconButton onClick={handleBack}>
                 <ArrowBackIcon />
               </IconButton>
             </div>
-            <div className={classes.contentBody}>
+            <div
+              style={{
+                margin: 'auto'
+              }}
+              className={classes.contentBody}>
               <form className={classes.form} onSubmit={handleSignUp}>
                 <Typography className={classes.title} variant="h2">
                   Create new account
