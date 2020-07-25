@@ -29,13 +29,7 @@ const Routes = () => {
           layout={MinimalLayout}
           path="/sign-in"
         />
-        <RouteWithLayout
-          component={NotFoundView}
-          exact
-          layout={MinimalLayout}
-          path="/not-found"
-        />
-        <Redirect to="/not-found" />
+        <Redirect to="/" />
       </Switch>
     );
   }
@@ -54,13 +48,7 @@ const Routes = () => {
         layout={MainLayout}
         path="/products"
       />
-      <RouteWithLayout
-        component={NotFoundView}
-        exact
-        layout={MinimalLayout}
-        path="/not-found"
-      />
-      <Redirect to="/not-found" />
+      <Redirect to="/" />
     </Switch>
   );
 };
