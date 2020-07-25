@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/styles';
 import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import InputIcon from '@material-ui/icons/Input';
+import { useAuth } from 'contexts/auth';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: 'none'
   },
@@ -19,37 +20,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Topbar = props => {
+const Topbar = (props) => {
   const { className, onSidebarOpen, ...rest } = props;
-
+  let { logout } = useAuth();
   const classes = useStyles();
 
   return (
-    <AppBar
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <AppBar {...rest} className={clsx(classes.root, className)}>
       <Toolbar>
         <RouterLink to="/">
-          <img
-            alt="Logo"
-            src="/images/logos/logo--white.svg"
-          />
+          <img alt="Logo" src="/images/logos/logo--white.svg" />
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <IconButton
             className={classes.signOutButton}
             color="inherit"
-          >
+            onClick={logout}>
             <InputIcon />
           </IconButton>
         </Hidden>
         <Hidden lgUp>
-          <IconButton
-            color="inherit"
-            onClick={onSidebarOpen}
-          >
+          <IconButton color="inherit" onClick={onSidebarOpen}>
             <MenuIcon />
           </IconButton>
         </Hidden>
