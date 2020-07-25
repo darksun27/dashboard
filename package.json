@@ -11,9 +11,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -25,6 +22,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "devDependencies": {
+    "eslint": "6.6.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "prettier": "^1.17.1",
+    "prettier-eslint": "^8.8.2",
+    "prettier-eslint-cli": "^4.7.1",
+    "typescript": "^3.5.1"
   },
   "dependencies": {
     "@material-ui/core": "^4.2.1",
@@ -47,14 +56,5 @@
     "underscore": "^1.9.1",
     "uuid": "^3.3.2",
     "validate.js": "^0.13.1"
-  },
-  "devDependencies": {
-    "eslint": "6.6.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "eslint-plugin-react": "^7.12.4",
-    "prettier": "^1.17.1",
-    "prettier-eslint": "^8.8.2",
-    "prettier-eslint-cli": "^4.7.1",
-    "typescript": "^3.5.1"
   }
 }

@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import { useUser } from 'contexts/user';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     backgroundColor: theme.palette.primary.main,
@@ -30,35 +31,27 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TotalProfit = props => {
+const TotalProfit = (props) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
+  let { orders } = useUser();
+  let length = orders?.length || 0;
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent>
-        <Grid
-          container
-          justify="space-between"
-        >
+        <Grid container justify="space-between">
           <Grid item>
             <Typography
               className={classes.title}
               color="inherit"
               gutterBottom
-              variant="body2"
-            >
-              TOTAL PROFIT
+              variant="body2">
+              TOTAL SALES
             </Typography>
-            <Typography
-              color="inherit"
-              variant="h3"
-            >
-              $23,200
+            <Typography color="inherit" variant="h3">
+              {length}
             </Typography>
           </Grid>
           <Grid item>

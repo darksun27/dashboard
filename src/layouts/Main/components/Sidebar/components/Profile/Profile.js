@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Profile = props => {
+const Profile = (props) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -30,19 +30,12 @@ const Profile = props => {
     avatar: '/images/avatars/avatar_11.png',
     bio: 'Brain Director'
   };
-
+  let { email } = JSON.parse(localStorage.getItem('user'));
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <Typography
-        className={classes.name}
-        variant="h4"
-      >
-        {user.name}
+    <div {...rest} className={clsx(classes.root, className)}>
+      <Typography className={classes.name} variant="h4">
+        {email}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
     </div>
   );
 };

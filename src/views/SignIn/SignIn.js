@@ -14,6 +14,7 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
+import { useAuth } from 'contexts/auth';
 
 const schema = {
   email: {
@@ -31,7 +32,7 @@ const schema = {
   }
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
     height: '100%'
@@ -125,10 +126,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SignIn = props => {
+const SignIn = (props) => {
   const { history } = props;
 
   const classes = useStyles();
+  const { signIn } = useAuth();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -140,7 +142,7 @@ const SignIn = props => {
   useEffect(() => {
     const errors = validate(formState.values, schema);
 
-    setFormState(formState => ({
+    setFormState((formState) => ({
       ...formState,
       isValid: errors ? false : true,
       errors: errors || {}
@@ -151,10 +153,10 @@ const SignIn = props => {
     history.goBack();
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     event.persist();
 
-    setFormState(formState => ({
+    setFormState((formState) => ({
       ...formState,
       values: {
         ...formState.values,
@@ -170,114 +172,34 @@ const SignIn = props => {
     }));
   };
 
-  const handleSignIn = event => {
+  const handleSignIn = async (event) => {
     event.preventDefault();
-    history.push('/');
+    let { email, password } = formState.values;
+    let response = await signIn({ email, password });
+    if (response) history.push('/');
   };
 
-  const hasError = field =>
+  const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
     <div className={classes.root}>
-      <Grid
-        className={classes.grid}
-        container
-      >
-        <Grid
-          className={classes.quoteContainer}
-          item
-          lg={5}
-        >
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography
-                className={classes.quoteText}
-                variant="h1"
-              >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
-              </Typography>
-              <div className={classes.person}>
-                <Typography
-                  className={classes.name}
-                  variant="body1"
-                >
-                  Takamaru Ayako
-                </Typography>
-                <Typography
-                  className={classes.bio}
-                  variant="body2"
-                >
-                  Manager at inVision
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </Grid>
-        <Grid
-          className={classes.content}
-          item
-          lg={7}
-          xs={12}
-        >
+      <Grid className={classes.grid} container>
+        <Grid className={classes.content} item xs={12}>
           <div className={classes.content}>
             <div className={classes.contentHeader}>
               <IconButton onClick={handleBack}>
                 <ArrowBackIcon />
               </IconButton>
             </div>
-            <div className={classes.contentBody}>
-              <form
-                className={classes.form}
-                onSubmit={handleSignIn}
-              >
-                <Typography
-                  className={classes.title}
-                  variant="h2"
-                >
+            <div
+              className={classes.contentBody}
+              style={{
+                margin: 'auto'
+              }}>
+              <form className={classes.form} onSubmit={handleSignIn}>
+                <Typography className={classes.title} variant="h2">
                   Sign in
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Sign in with social media
-                </Typography>
-                <Grid
-                  className={classes.socialButtons}
-                  container
-                  spacing={2}
-                >
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Typography
-                  align="center"
-                  className={classes.sugestion}
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  or login with email address
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -314,20 +236,12 @@ const SignIn = props => {
                   fullWidth
                   size="large"
                   type="submit"
-                  variant="contained"
-                >
+                  variant="contained">
                   Sign in now
                 </Button>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
+                <Typography color="textSecondary" variant="body1">
                   Don't have an account?{' '}
-                  <Link
-                    component={RouterLink}
-                    to="/sign-up"
-                    variant="h6"
-                  >
+                  <Link component={RouterLink} to="/sign-up" variant="h6">
                     Sign up
                   </Link>
                 </Typography>
