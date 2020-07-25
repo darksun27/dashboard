@@ -38,7 +38,8 @@ export const AuthProvider = ({ children }) => {
         'user',
         JSON.stringify({
           token,
-          type
+          type,
+          email
         })
       );
       console.log(type);
@@ -69,7 +70,8 @@ export const AuthProvider = ({ children }) => {
         'user',
         JSON.stringify({
           token,
-          type
+          type,
+          email
         })
       );
       console.log(type);
