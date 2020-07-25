@@ -3,13 +3,12 @@ import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
-  CardActions,
   CardHeader,
   CardContent,
-  Button,
   Divider,
   Table,
   TableBody,
@@ -19,10 +18,9 @@ import {
   Tooltip,
   TableSortLabel
 } from '@material-ui/core';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+
 
 import mockData from './data';
-import { StatusBullet } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -44,34 +42,30 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const statusColors = {
-  delivered: 'success',
-  pending: 'info',
-  refunded: 'danger'
-};
 
-const LatestOrders = props => {
+
+const LatestOrders = async props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
 
   const [orders] = useState(mockData);
 
+  const response  = axios.get('http://localhost:5000/getSales', {
+    params: {
+      'email': 'sbsiddharth@gmail.com'
+    },
+    headers: {
+      'auth': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1ZjFjMjdmY2U1ZDFhZTI3MWNhY2I3ZmIiLCJpYXQiOjE1OTU2ODA5ODU2Mzd9.qTL9y5_YWHmPrNeA6sWlzRFlUAGAr2wcwItlRhBFvF8'
+    }
+  })
+  console.log(response);
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
       <CardHeader
-        action={
-          <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-          >
-            New entry
-          </Button>
-        }
         title="Latest Orders"
       />
       <Divider />
@@ -84,19 +78,9 @@ const LatestOrders = props => {
                   <TableCell>Order Ref</TableCell>
                   <TableCell>Customer</TableCell>
                   <TableCell sortDirection="desc">
-                    <Tooltip
-                      enterDelay={300}
-                      title="Sort"
-                    >
-                      <TableSortLabel
-                        active
-                        direction="desc"
-                      >
+          
                         Date
-                      </TableSortLabel>
-                    </Tooltip>
                   </TableCell>
-                  <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -110,16 +94,6 @@ const LatestOrders = props => {
                     <TableCell>
                       {moment(order.createdAt).format('DD/MM/YYYY')}
                     </TableCell>
-                    <TableCell>
-                      <div className={classes.statusContainer}>
-                        <StatusBullet
-                          className={classes.status}
-                          color={statusColors[order.status]}
-                          size="sm"
-                        />
-                        {order.status}
-                      </div>
-                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -128,15 +102,6 @@ const LatestOrders = props => {
         </PerfectScrollbar>
       </CardContent>
       <Divider />
-      <CardActions className={classes.actions}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >
-          View all <ArrowRightIcon />
-        </Button>
-      </CardActions>
     </Card>
   );
 };
