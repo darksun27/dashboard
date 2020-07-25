@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
@@ -44,22 +43,13 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const LatestOrders = async props => {
+const LatestOrders = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
 
   const [orders] = useState(mockData);
 
-  const response  = axios.get('http://localhost:5000/getSales', {
-    params: {
-      'email': 'sbsiddharth@gmail.com'
-    },
-    headers: {
-      'auth': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1ZjFjMjdmY2U1ZDFhZTI3MWNhY2I3ZmIiLCJpYXQiOjE1OTU2ODA5ODU2Mzd9.qTL9y5_YWHmPrNeA6sWlzRFlUAGAr2wcwItlRhBFvF8'
-    }
-  })
-  console.log(response);
   return (
     <Card
       {...rest}
