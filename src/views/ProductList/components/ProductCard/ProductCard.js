@@ -16,8 +16,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 const useStyles = makeStyles(theme => ({
   root: {},
   imageContainer: {
-    height: 64,
-    width: 64,
+    height: 120,
+    width: 120,
     margin: '0 auto',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: '5px',
@@ -81,24 +81,16 @@ const ProductCard = props => {
             className={classes.statsItem}
             item
           >
-            <AccessTimeIcon className={classes.statsIcon} />
-            <Typography
-              display="inline"
-              variant="body2"
-            >
-              Updated 2hr ago
-            </Typography>
           </Grid>
           <Grid
             className={classes.statsItem}
             item
           >
-            <GetAppIcon className={classes.statsIcon} />
             <Typography
               display="inline"
-              variant="body2"
+              variant="body1"
             >
-              {product.totalDownloads} Downloads
+              ₹ {product.totalDownloads} 
             </Typography>
           </Grid>
         </Grid>

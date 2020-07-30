@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Hidden, IconButton, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import InputIcon from '@material-ui/icons/Input';
 import { useAuth } from 'contexts/auth';
@@ -29,7 +29,12 @@ const Topbar = (props) => {
     <AppBar {...rest} className={clsx(classes.root, className)}>
       <Toolbar>
         <RouterLink to="/">
-          <img alt="Logo" src="/images/logos/logo--white.svg" />
+          {/* <img alt="Logo" src="/images/logos/logo--white.svg" /> */}
+          <Typography
+            style={{color:"white"}}
+            variant="h2">
+            DigitalLearning
+          </Typography>
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>

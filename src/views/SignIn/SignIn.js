@@ -130,7 +130,7 @@ const SignIn = (props) => {
   const { history } = props;
 
   const classes = useStyles();
-  const { signIn } = useAuth();
+  const { signIn, errorText, hasErrorLogin } = useAuth();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -215,12 +215,13 @@ const SignIn = (props) => {
                   value={formState.values.email || ''}
                   variant="outlined"
                 />
+                {console.log(hasErrorLogin, errorText)}
                 <TextField
                   className={classes.textField}
-                  error={hasError('password')}
+                  error={hasErrorLogin}
                   fullWidth
                   helperText={
-                    hasError('password') ? formState.errors.password[0] : null
+                    hasErrorLogin ? errorText : null
                   }
                   label="Password"
                   name="password"

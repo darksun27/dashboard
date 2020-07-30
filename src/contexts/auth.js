@@ -7,6 +7,9 @@ const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setisAuthenticated] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const [errorText, setErrorText] = useState('');
+  const [hasErrorLogin, setHasErrorLogin] = useState(false);
+
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem('user'));
@@ -79,6 +82,8 @@ export const AuthProvider = ({ children }) => {
       setisAuthenticated(true);
       return true;
     } catch (e) {
+      setHasErrorLogin(true);
+      setErrorText('Incorrect Password or Email');
       console.log('SignIn Failed');
       console.log(e);
       return false;
@@ -92,6 +97,8 @@ export const AuthProvider = ({ children }) => {
         signUp,
         signIn,
         isLoading,
+        errorText,
+        hasErrorLogin,
         logout
       }}>
       {children}

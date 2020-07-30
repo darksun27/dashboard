@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
@@ -14,8 +15,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
-  TableSortLabel,
   TextField,
   Button
 } from '@material-ui/core';
@@ -60,32 +59,51 @@ const LatestOrders = (props) => {
 
   const fetchData = async () => {
     let { token } = JSON.parse(localStorage.getItem('user'));
-    let { data } = await axios.get(`${BASE_URI}/getSales`, {
-      headers: {
-        auth: token
-      }
-    });
-    setOrders(data);
-    _setOrders(data);
-  };
-
-  const fetchSalesByEmail = async () => {
-    let { token } = JSON.parse(localStorage.getItem('user'));
-    let { data } = await axios.get(
-      `${BASE_URI}/getSalesPerson?email=${email}`,
-      {
+    if(isAdmin) {
+      let { data } = await axios.get(`${BASE_URI}/getSalesAll`, {
         headers: {
           auth: token
         }
-      }
-    );
-    setOrders(data);
-    _setOrders(data);
+      });
+      setOrders(data);
+      _setOrders(data);
+    }else {
+      let { data } = await axios.get(`${BASE_URI}/getSales`, {
+        headers: {
+          auth: token
+        }
+      });
+      setOrders(data);
+      _setOrders(data);
+    }
+  };
+  const [foundEmail,setFoundEmail] = useState(true);
+  const fetchSalesByEmail = async () => {
+    let { token } = JSON.parse(localStorage.getItem('user'));
+    console.log(email)
+    try {
+      let { data } = await axios.get(
+        `${BASE_URI}/getSalesPerson?email=${email}`,
+        {
+          headers: {
+            auth: token
+          }
+        }
+      );
+      setOrders(data);
+      _setOrders(data);
+    }
+    catch(e) {
+      setFoundEmail(false)
+    }
+    
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if(email.length < 1){
+      fetchData();
+    }
+  }, [orders]);
 
   const handleChange = (event) => {
     event.persist();
@@ -106,25 +124,37 @@ const LatestOrders = (props) => {
     }));
   };
 
+  const [errorEntry, setErrorEntry] = useState(false)
+  const [errorEntryText, setErrorEntryText] = useState('')
+
   const addEntry = async () => {
     try {
       let formData = new FormData();
       let { token } = JSON.parse(localStorage.getItem('user'));
-      let { customer, email, product } = formState.values;
+      let { customer, product } = formState.values;
       formData.append('customer', customer);
       formData.append('product', product);
-      formData.append('email', email);
+      formData.append('email', formState.values.email);
       console.log(token);
-      let { data } = new axios({
-        method: 'POST',
-        url: `${BASE_URI}/newEntry`,
-        data: formData,
-        headers: {
-          auth: token
-        }
-      });
-      fetchSalesByEmail();
+      if(!(customer.length < 1 || formState.values.email.length < 1 || product.length < 1)){
+        let { data } = new axios({
+          method: 'POST',
+          url: `${BASE_URI}/newEntry`,
+          data: formData,
+          headers: {
+            auth: token
+          }
+        });
+      }
+      if(email.length > 1){
+        fetchSalesByEmail();
+      }
+      else {
+        fetchData();
+      }
     } catch (e) {
+      setErrorEntry(true)
+      setErrorEntryText('Error Adding Entry')
       console.log('Add entry failed');
       console.log(e);
     }
@@ -139,7 +169,12 @@ const LatestOrders = (props) => {
           auth: token
         }
       });
-      fetchData();
+      if(email.length < 1){
+        fetchData();
+      }
+      else {
+        fetchSalesByEmail();
+      }
     } catch (e) {
       console.log(e);
       console.log('Delete failed');
@@ -154,8 +189,12 @@ const LatestOrders = (props) => {
           <Card>
             <CardContent>
               <TextField
+                error={!foundEmail}
+                helperText = {
+                  !foundEmail ? "Email Not Found":null
+                }
                 style={{
-                  width: '30%',
+                  width: '60%',
                   marginBottom: 10,
                   marginRight: '1rem'
                 }}
@@ -170,7 +209,7 @@ const LatestOrders = (props) => {
                 color="primary"
                 size="large"
                 type="submit"
-                fullWidth
+                style={{width: '30%',marginTop:'0.25rem'}}
                 onClick={fetchSalesByEmail}
                 variant="contained">
                 SEARCH
@@ -180,8 +219,12 @@ const LatestOrders = (props) => {
           <Card>
             <CardContent>
               <TextField
+                error={errorEntry}
+                helperText={
+                  errorEntry ? errorEntryText : null
+                }
                 style={{
-                  width: '30%',
+                  width: '32%',
                   marginBottom: 10,
                   marginRight: '1rem'
                 }}
@@ -194,7 +237,7 @@ const LatestOrders = (props) => {
               />
               <TextField
                 style={{
-                  width: '30%',
+                  width: '32%',
                   marginBottom: 10,
                   marginRight: '1rem'
                 }}
@@ -208,7 +251,7 @@ const LatestOrders = (props) => {
               />
               <TextField
                 style={{
-                  width: '30%'
+                  width: '32%'
                 }}
                 fullWidth
                 label="Product"
@@ -240,14 +283,17 @@ const LatestOrders = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
+                  {isAdmin && <TableCell>User</TableCell>}
                   <TableCell>Customer</TableCell>
                   <TableCell sortDirection="desc">Product</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {orders?.map((order) => (
+                  
                   <TableRow hover key={order._id}>
                     <TableCell>{order._id}</TableCell>
+                    {isAdmin && <TableCell>{order.email}</TableCell>}
                     <TableCell>{order.customer}</TableCell>
                     <TableCell>{order.product}</TableCell>
                     {isAdmin && (
