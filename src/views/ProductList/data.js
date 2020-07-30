@@ -15,7 +15,7 @@ export default [
     description:
       'Personality Development + Heath Development',
     imageUrl: '/images/products/product_2.png',
-    totalDownloads: '625',
+    totalDownloads: '1500',
     createdAt: '31/03/2019'
   },
   {
@@ -24,7 +24,7 @@ export default [
     description:
       'Personality Development + Health Development + Mental Health',
     imageUrl: '/images/products/product_3.jpg',
-    totalDownloads: '857',
+    totalDownloads: '3000',
     createdAt: '03/04/2019'
   }
 ];
