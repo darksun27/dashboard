@@ -8,7 +8,8 @@ import {
   CardActions,
   Typography,
   Grid,
-  Divider
+  Divider,
+  Button
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -40,9 +41,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ProductCard = props => {
-  const { className, product, ...rest } = props;
+  const { className, product , ...rest } = props;
+  let { id } = JSON.parse(localStorage.getItem('user'));
 
   const classes = useStyles();
+
+  const getSaleLink = (event)=> {
+    event.preventDefault();
+    navigator.clipboard.writeText(event.currentTarget.value);
+    alert("Copied to clipboard");
+  }
 
   return (
     <Card
@@ -81,6 +89,14 @@ const ProductCard = props => {
             className={classes.statsItem}
             item
           >
+            <Button
+              color="primary"
+              variant="contained"
+              value={`${window.location.hostname}/sale/${id}/${product.title}`}
+              onClick={getSaleLink}
+            >
+              Get Sale Link
+            </Button>
           </Grid>
           <Grid
             className={classes.statsItem}

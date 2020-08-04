@@ -5,13 +5,9 @@ import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
-  CardActions,
   CardContent,
-  Avatar,
   Typography,
   Divider,
-  Button,
-  LinearProgress
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -35,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AccountProfile = props => {
+  let { email } = JSON.parse(localStorage.getItem('user'));
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -43,7 +40,7 @@ const AccountProfile = props => {
     name: 'Shen Zhi',
     city: 'Los Angeles',
     country: 'USA',
-    timezone: 'GTM-7',
+    timezone: 'GMT+5:30',
     avatar: '/images/avatars/avatar_11.png'
   };
 
@@ -59,47 +56,13 @@ const AccountProfile = props => {
               gutterBottom
               variant="h2"
             >
-              John Doe
+              {email}
             </Typography>
-            <Typography
-              className={classes.locationText}
-              color="textSecondary"
-              variant="body1"
-            >
-              {user.city}, {user.country}
-            </Typography>
-            <Typography
-              className={classes.dateText}
-              color="textSecondary"
-              variant="body1"
-            >
-              {moment().format('hh:mm A')} ({user.timezone})
-            </Typography>
+            <Typography>{moment().format('hh:mm A')} ({user.timezone})</Typography>
           </div>
-          <Avatar
-            className={classes.avatar}
-            src={user.avatar}
-          />
-        </div>
-        <div className={classes.progress}>
-          <Typography variant="body1">Profile Completeness: 70%</Typography>
-          <LinearProgress
-            value={70}
-            variant="determinate"
-          />
         </div>
       </CardContent>
       <Divider />
-      <CardActions>
-        <Button
-          className={classes.uploadButton}
-          color="primary"
-          variant="text"
-        >
-          Upload picture
-        </Button>
-        <Button variant="text">Remove picture</Button>
-      </CardActions>
     </Card>
   );
 };

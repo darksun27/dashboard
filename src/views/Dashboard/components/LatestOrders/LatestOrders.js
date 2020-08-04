@@ -103,7 +103,7 @@ const LatestOrders = (props) => {
     if(email.length < 1){
       fetchData();
     }
-  }, [orders]);
+  }, []);
 
   const handleChange = (event) => {
     event.persist();
@@ -135,7 +135,7 @@ const LatestOrders = (props) => {
       formData.append('customer', customer);
       formData.append('product', product);
       formData.append('email', formState.values.email);
-      console.log(token);
+      console.log(formData);
       if(!(customer.length < 1 || formState.values.email.length < 1 || product.length < 1)){
         let { data } = new axios({
           method: 'POST',

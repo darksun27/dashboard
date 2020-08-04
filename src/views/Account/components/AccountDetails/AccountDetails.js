@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+import { BASE_URI } from 'api/constants';
+import axios from 'axios';
 import {
   Card,
   CardHeader,
@@ -13,46 +15,80 @@ import {
   TextField
 } from '@material-ui/core';
 
+
+
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
+
+
+
 const AccountDetails = props => {
+  let { token, email } = JSON.parse(localStorage.getItem('user'));
   const { className, ...rest } = props;
 
   const classes = useStyles();
 
-  const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+  const [values, setValues] = useState({});
 
-  const handleChange = event => {
+
+  const fetchData = async()=> {
+    try {
+      let { data } = await axios.get(
+        `${BASE_URI}/getBankDetails?email=${email}`,
+        {
+          headers: {
+            auth: token
+          }
+        }
+      );
+      console.log("data",data[0]);
+      setValues(data[0]);
+    }
+    catch(e) {
+      console.log('Error fetching bank details')
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleClick = async (event) => {
+    event.preventDefault();
+    let formData = new FormData();
+    console.log(values)
+    formData.append('email', email);
+    formData.append('accountName', values.accountName);
+    formData.append('accountNumber', values.accountNumber);
+    formData.append('bankName', values.bankName);
+    formData.append('bankBranch', values.bankBranch);
+    formData.append('ifsc', values.ifsc);
+    console.log(formData)
+    try {
+      console.log(token)
+      let {data} = await new axios({
+        method: 'POST',
+        url: `${BASE_URI}/saveBankDetails`,
+        headers: { 'auth': token, 'Content-Type': 'multipart/form-data' },
+        data: formData
+      })
+    }
+    catch (e) {
+      console.log('error saving details');  
+    }
+    fetchData();
+    console.log(values);
+  };
+
+  const handleChange = async event => {
     setValues({
       ...values,
       [event.target.name]: event.target.value
     });
+
   };
-
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
-    }
-  ];
-
   return (
     <Card
       {...rest}
@@ -61,10 +97,11 @@ const AccountDetails = props => {
       <form
         autoComplete="off"
         noValidate
+        onSubmit={handleClick}
       >
         <CardHeader
           subheader="The information can be edited"
-          title="Profile"
+          title="Bank Details"
         />
         <Divider />
         <CardContent>
@@ -79,13 +116,13 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
+                helperText="Please specify the account holder's name"
+                label="Name of Account Holder"
                 margin="dense"
-                name="firstName"
+                name="accountName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.accountName || ''}
                 variant="outlined"
               />
             </Grid>
@@ -96,12 +133,13 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Last name"
+                helperText="Please specify the Bank's name"
+                label="Bank Name"
                 margin="dense"
-                name="lastName"
+                name="bankName"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.bankName || ''}
                 variant="outlined"
               />
             </Grid>
@@ -112,12 +150,13 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
-                margin="dense"
-                name="email"
+                helperText="Please specify the account number"
+                label="Account Number"
+                margin="normal"
+                name="accountNumber"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={values.accountNumber || ''}
                 variant="outlined"
               />
             </Grid>
@@ -128,12 +167,13 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
+                helperText="Please specify the bank's branch name"
+                label="Bank Branch"
                 margin="dense"
-                name="phone"
+                name="bankBranch"
                 onChange={handleChange}
-                type="number"
-                value={values.phone}
+                required
+                value={values.bankBranch || ''}
                 variant="outlined"
               />
             </Grid>
@@ -144,40 +184,13 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Select State"
+                helperText="Please specify the bank's IFSC Code"
+                label="IFSC Code"
                 margin="dense"
-                name="state"
+                name="ifsc"
                 onChange={handleChange}
                 required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
+                value={values.ifsc || ''}
                 variant="outlined"
               />
             </Grid>
@@ -187,6 +200,7 @@ const AccountDetails = props => {
         <CardActions>
           <Button
             color="primary"
+            type="submit"
             variant="contained"
           >
             Save details

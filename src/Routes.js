@@ -8,7 +8,8 @@ import {
   ProductList as ProductListView,
   SignIn as SignInView,
   SignUp as SignUpView,
-  NotFound as NotFoundView
+  Account as AccountView,
+  Sale as SaleView
 } from './views';
 
 const Routes = () => {
@@ -29,6 +30,12 @@ const Routes = () => {
           layout={MinimalLayout}
           path="/sign-in"
         />
+        <RouteWithLayout
+          component={SaleView}
+          exact
+          layout={MinimalLayout}
+          path="/sale/:user/:course"
+        />
         <Redirect to="/" />
       </Switch>
     );
@@ -36,6 +43,12 @@ const Routes = () => {
   return (
     <Switch>
       <Redirect exact from="/" to="/dashboard" />
+      <RouteWithLayout
+        component={SaleView}
+        exact
+        layout={MinimalLayout}
+        path="/sale/:user/:course"
+      />
       <RouteWithLayout
         component={DashboardView}
         exact
@@ -47,6 +60,12 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/products"
+      />
+      <RouteWithLayout
+        component={AccountView}
+        exact
+        layout={MainLayout}
+        path="/bankDetails"
       />
       <Redirect to="/" />
     </Switch>

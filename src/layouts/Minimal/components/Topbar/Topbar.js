@@ -28,7 +28,7 @@ const Topbar = props => {
           <Typography 
             style={{color:"white"}}
             variant="h2">
-            DigitalLearning
+            DigitaLearning
           </Typography>
         </RouterLink>
       </Toolbar>

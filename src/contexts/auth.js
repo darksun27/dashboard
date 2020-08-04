@@ -25,27 +25,25 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async ({ email, password }) => {
     setisLoading(true);
-    let data = new FormData();
-    data.append('email', email);
-    data.append('password', password);
+    let formdata = new FormData();
+    formdata.append('email', email);
+    formdata.append('password', password);
     try {
       let {
-        data: { token, type }
+        data
       } = await new Axios({
         method: 'POST',
         url: `${BASE_URI}/signup`,
-        config: { headers: { 'Content-Type': 'multipart/form-data' } },
-        data
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: formdata
       });
       localStorage.setItem(
         'user',
         JSON.stringify({
-          token,
-          type,
-          email
+          data
         })
       );
-      console.log(type);
+      // console.log(type);
       console.log('SignUp success');
       setisAuthenticated(true);
       return true;
@@ -58,26 +56,27 @@ export const AuthProvider = ({ children }) => {
   const signIn = async ({ email, password }) => {
     setisLoading(true);
     try {
-      let data = new FormData();
-      data.append('email', email);
-      data.append('password', password);
+      let formdata = new FormData();
+      formdata.append('email', email);
+      formdata.append('password', password);
       let {
-        data: { token, type }
+        data
       } = await new Axios({
         method: 'POST',
         url: `${BASE_URI}/signin`,
-        config: { headers: { 'Content-Type': 'multipart/form-data' } },
-        data
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data:formdata
       });
+      console.log(data)
       localStorage.setItem(
         'user',
         JSON.stringify({
-          token,
-          type,
-          email
+          type:data.type,
+          token:data.token,
+          id:data.id,
         })
       );
-      console.log(type);
+      // console.log(type);
       console.log('SignIn success');
       setisAuthenticated(true);
       return true;

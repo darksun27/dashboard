@@ -33,11 +33,11 @@ const Topbar = (props) => {
           <Typography
             style={{color:"white"}}
             variant="h2">
-            DigitalLearning
+            DigitaLearning
           </Typography>
         </RouterLink>
         <div className={classes.flexGrow} />
-        <Hidden mdDown>
+        <Hidden>
           <IconButton
             className={classes.signOutButton}
             color="inherit"

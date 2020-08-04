@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
+import axios from 'axios';
+import { BASE_URI } from 'api/constants';
 import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
@@ -12,7 +14,6 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
 import { useAuth } from 'contexts/auth';
 
 const schema = {
@@ -125,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const SignIn = (props) => {
+const Sale = (props) => {
   const { history } = props;
 
   const classes = useStyles();
@@ -171,6 +172,27 @@ const SignIn = (props) => {
     }));
   };
 
+  const confirmSale = async ()=>{
+    let formData = new FormData();
+    formData.append('email', props.match.params.user);
+    formData.append('customer', formState.values.email);
+    formData.append('product', props.match.params.course);
+    try {
+      let {data} = await new axios({
+        method: 'POST',
+        url: `${BASE_URI}/confirmSale`,
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: formData
+      }) 
+      if(data){
+        alert('Done')
+      }
+    }
+    catch(e) {
+      alert(e)
+    }
+  }
+
   const handleSignIn = async (event) => {
     event.preventDefault();
     let { email, password } = formState.values;
@@ -196,59 +218,44 @@ const SignIn = (props) => {
               style={{
                 margin: 'auto'
               }}>
-              <form 
-                className={classes.form} 
-                onSubmit={handleSignIn}>
-                <Typography 
-                  className={classes.title} 
-                  variant="h2">
-                  Sign in
+              <form className={classes.form}>
+                <Typography className={classes.title} variant="h2">
+                  Confirm Order
                 </Typography>
                 <TextField
                   className={classes.textField}
                   error={hasError('email')}
                   fullWidth
-                  helperText={
-                    hasError('email') ? formState.errors.email[0] : null
-                  }
-                  label="Email address"
+                  label="Customer Email Address"
                   name="email"
                   onChange={handleChange}
                   type="text"
                   value={formState.values.email || ''}
                   variant="outlined"
                 />
-                {console.log(hasErrorLogin, errorText)}
                 <TextField
                   className={classes.textField}
-                  error={hasErrorLogin}
                   fullWidth
-                  helperText={
-                    hasErrorLogin ? errorText : null
-                  }
-                  label="Password"
-                  name="password"
-                  onChange={handleChange}
-                  type="password"
-                  value={formState.values.password || ''}
+                  label="Referral"
+                  name="Referral"
+                  disabled
+                  value={props.match.params.user || ''}
                   variant="outlined"
                 />
+                <Typography className={classes.title} variant="h2">
+                  Course Selected: {props.match.params.course || 'Course Selected'}
+                </Typography>
                 <Button
                   className={classes.signInButton}
                   color="primary"
-                  disabled={!formState.isValid}
                   fullWidth
                   size="large"
                   type="submit"
-                  variant="contained">
-                  Sign in now
+                  variant="contained"
+                  onClick={confirmSale}  
+                >
+                  Confirm
                 </Button>
-                <Typography color="textSecondary" variant="body1">
-                  Don't have an account?{' '}
-                  <Link component={RouterLink} to="/sign-up" variant="h6">
-                    Sign up
-                  </Link>
-                </Typography>
               </form>
             </div>
           </div>
@@ -258,8 +265,8 @@ const SignIn = (props) => {
   );
 };
 
-SignIn.propTypes = {
+Sale.propTypes = {
   history: PropTypes.object
 };
 
-export default withRouter(SignIn);
+export default withRouter(Sale);

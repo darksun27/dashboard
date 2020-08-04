@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import { ProductCard } from './components';
@@ -23,6 +23,8 @@ const ProductList = () => {
   const classes = useStyles();
 
   const [products] = useState(mockData);
+  const [link, setLink] = useState('');
+  let { id } = JSON.parse(localStorage.getItem('user'));
 
   return (
     <div className={classes.root}>
@@ -39,7 +41,7 @@ const ProductList = () => {
               md={6}
               xs={12}
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} user={id} />
             </Grid>
           ))}
         </Grid>
